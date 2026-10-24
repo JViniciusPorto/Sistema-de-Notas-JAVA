@@ -1,5 +1,7 @@
+// use chcp 65001 caso dê erro de formatação no terminal
 package modelos;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import enums.ResultadoCriacao;
@@ -14,15 +16,18 @@ public class Sistema {
     private GerenciarArquivos gerenciador;
     private Scanner teclado;
     private final String respostaSaida = "SALVAR";
+    private String nomeArquivo;
     private String texto;
     private String resposta;
+    private String nomeAluno;
     private ResultadoTratamento resultado;
     private ResultadoCriacao estadoCriacao;
     private ResultadoSalvamento estadoSalvamento;
     private ResultadoExclusao estadoExclusao;
+
     public Sistema(){
         gerenciador = new GerenciarArquivos();
-        teclado = new Scanner(System.in);
+        teclado = new Scanner(System.in,StandardCharsets.UTF_8);
     }
 
     public void cadastrarDisciplina(){
@@ -34,16 +39,16 @@ public class Sistema {
             System.out.println("                Criação do Arquivo              ");
             System.out.println("==============================================\n");
             System.out.println("Digite o nome do arquivo: ");
-            texto = teclado.nextLine().trim().toUpperCase();
-            if(!texto.isEmpty()){
-                texto = TratamentoDeEntradas.tratarTexto(texto);
-                disciplina = new Disciplina(texto);
+            nomeArquivo = teclado.nextLine();
+            if(!nomeArquivo.isEmpty()){
+                nomeArquivo = TratamentoDeEntradas.tratarNomeArquivo(nomeArquivo);
+                disciplina = new Disciplina(nomeArquivo);
             }else{
                 System.out.println("Digite um nome válido!");
                 LimparTela.esperar(1000);
                 continue;
             }
-            System.out.printf("O título do arquivo será %s \n",texto);
+            System.out.printf("O título do arquivo será %s \n",nomeArquivo);
             System.out.println("Confirma o título? (S/N)");
             texto = teclado.nextLine();
             texto = TratamentoDeEntradas.tratarTexto(texto);
@@ -81,20 +86,31 @@ public class Sistema {
             System.out.println("============================================\n");
 
             System.out.println("Digite o nome do aluno:");
-            texto = teclado.nextLine();
-            texto = TratamentoDeEntradas.tratarTexto(texto);
-            aluno = new Aluno(texto);
+            nomeAluno = teclado.nextLine();
+            nomeAluno = TratamentoDeEntradas.tratarNome(nomeAluno);
+            if(!nomeAluno.isEmpty()){
+                aluno = new Aluno(nomeAluno);
+                System.out.println("Nome recebido: "+nomeAluno);
+                LimparTela.esperar(1000);
+            }else{
+                System.out.println("Digite um nome válido!");
+                LimparTela.esperar(1000);
+                continue;
+            }
+
             if(disciplina.isAlunoContido(aluno)){
                 System.out.println("Esse aluno já foi registrado!");
                 LimparTela.esperar(1000);
                 continue;
             }
+
             while(true){
                 System.out.println("Digite o gabarito do aluno:");
                 System.out.println("[Somente com V/F]");
                 resposta = teclado.nextLine();
-                resposta = TratamentoDeEntradas.tratarTexto(resposta);
+                resposta = TratamentoDeEntradas.tratarResposta(resposta);
                 resultado = TratamentoDeEntradas.validarResposta(resposta);
+
                 if(resultado == ResultadoTratamento.VALIDO){
                     break;
                 }else if(resultado == ResultadoTratamento.CARACTERE_INVALIDO){
@@ -111,6 +127,7 @@ public class Sistema {
                     LimparTela.esperar(1000);
                     continue;
                 }
+
             }
             disciplina.adicionarAluno(aluno, resposta);
 
@@ -128,6 +145,7 @@ public class Sistema {
         }
 
         estadoSalvamento = gerenciador.salvarRegistroDisciplina(disciplina);
+
         if(estadoSalvamento == ResultadoSalvamento.SALVO){
             System.out.println("Registros dos gabaritos salvos!");
         }else if(estadoSalvamento == ResultadoSalvamento.ARQUIVO_INACESSIVEL){
