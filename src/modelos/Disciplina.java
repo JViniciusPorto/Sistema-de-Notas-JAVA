@@ -3,18 +3,16 @@ package modelos;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Disciplina {
   private String nome;
   private Map<Aluno,String> registro;
-  private List<Aluno> nomesAlunos;
+
   public Disciplina(String nome){
     this.nome = nome;
     this.registro = new LinkedHashMap<>();
-    this.nomesAlunos = new ArrayList<>();
   }
 
   public void adicionarAluno(Aluno aluno, String resposta){
@@ -43,6 +41,8 @@ public class Disciplina {
   }
 
   public List<Aluno> getNomesAlunos(){
+    List<Aluno> nomesAlunos = new ArrayList<>();
+    
     for(Map.Entry<Aluno,String> entrada : registro.entrySet()){
         nomesAlunos.add(entrada.getKey());
     }
