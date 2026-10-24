@@ -16,10 +16,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+// === BOLETIM === imports novos
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.InvalidPathException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import modelos.*;
 
 public class GerenciarArquivos {
+    // Sufixo dos resultados por ordem alfabética (ex.: POO_alfabetico.txt). Quem GRAVA esses
+    // resultados (módulo de resultados) deve usar esta mesma constante, para os nomes nunca divergirem.
+    public static final String SUFIXO_RESULTADO_ALFABETICO = "_alfabetico.txt";
+    private final Path pastaBoletins = Path.of("src", "persistencia", "boletins");
     private final Path pastaDisciplina;
     private Path arquivo;
     private FileWriter escritorDeArquivos;
@@ -114,4 +125,52 @@ public class GerenciarArquivos {
         }
     }
 
+    public boolean existeDiretorio(Path diretorio) {
+        return Files.isDirectory(diretorio);
+    }
+
+    // Lista só os resultados alfabéticos (NOME_alfabetico.txt) do diretório, em ordem alfabética.
+    // Outros arquivos da pasta (ex.: resultados por nota) são ignorados.
+    public List<Path> listarResultadosAlfabeticos(Path diretorio) {
+        try (Stream<Path> arquivos = Files.list(diretorio)) {
+            return arquivos
+                    .filter(Files::isRegularFile)
+                    .filter(p -> {
+                        String nome = p.getFileName().toString().toLowerCase();
+                        return nome.endsWith(SUFIXO_RESULTADO_ALFABETICO)
+                                && nome.length() > SUFIXO_RESULTADO_ALFABETICO.length();
+                    })
+                    .sorted()
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            return List.of();
+        }
+    }
+
+    public List<String> lerLinhas(Path arquivo) {
+        try {
+            return Files.readAllLines(arquivo, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    // O nome do arquivo é o nome do aluno. Se já existir, é sobrescrito.
+    // A pasta de boletins é criada aqui, só quando é preciso.
+    public ResultadoSalvamento salvarBoletim(String nomeAluno, String conteudo) {
+        String nomeArquivo = nomeAluno.replaceAll("[\\\\/:*?\"<>|]", "_") + ".txt";
+        try {
+            Files.createDirectories(pastaBoletins);
+            Files.writeString(pastaBoletins.resolve(nomeArquivo), conteudo, StandardCharsets.UTF_8);
+            return ResultadoSalvamento.SALVO;
+        } catch (AccessDeniedException | NoSuchFileException e) {
+            return ResultadoSalvamento.ARQUIVO_INACESSIVEL;
+        } catch (IOException | InvalidPathException e) {
+            return ResultadoSalvamento.ERRO_ARQUIVO;
+        }
+    }
+
+    public Path getPastaBoletins() {
+        return pastaBoletins;
+    }
 }
