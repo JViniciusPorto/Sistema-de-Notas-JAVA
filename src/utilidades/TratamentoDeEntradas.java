@@ -1,6 +1,7 @@
 package utilidades;
 
 import enums.ResultadoTratamento;
+import java.text.Normalizer;
 
 public class TratamentoDeEntradas {
     public static ResultadoTratamento validarResposta(String respostas) {
@@ -29,10 +30,21 @@ public class TratamentoDeEntradas {
     }
 
     public static String tratarNomeArquivo(String nomeArquivo) {
-        return nomeArquivo.trim().toUpperCase().replaceAll("[^a-zA-Z]","");
+        String semAcento = Normalizer.normalize(nomeArquivo.trim(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");          
+        // remove os acentos (á→a, ã→a, ç→c...)
+        return semAcento.toUpperCase().replaceAll("[^A-Z0-9]", "");
     }
 
     public static String tratarTexto(String texto){
         return texto.trim().toUpperCase();
+    }
+    public static int tratarNumero(String texto){
+        int numero;
+        try{
+            numero = Integer.parseInt(texto);
+        }catch(NumberFormatException e){
+            numero = -1;
+        }
+        return numero;
     }
 }

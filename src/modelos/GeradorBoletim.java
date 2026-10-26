@@ -1,4 +1,4 @@
-package servicos;
+package modelos;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -10,10 +10,6 @@ import java.util.TreeMap;
 import enums.ResultadoGeracao;
 import enums.ResultadoSalvamento;
 import gerenciar_arquivos.GerenciarArquivos;
-import modelos.Aluno;
-import modelos.Boletim;
-import modelos.Disciplina;
-import modelos.Nota;
 
 public class GeradorBoletim {
     private final GerenciarArquivos gerenciador;
@@ -41,8 +37,8 @@ public class GeradorBoletim {
         }
 
         // TreeMap: os boletins saem em ordem alfabética de aluno
-        Map<String, Aluno> alunos = new TreeMap<>();
-        Map<String, List<Nota>> notasPorAluno = new TreeMap<>();
+        Map<String, Aluno> alunos = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        Map<String, List<Nota>> notasPorAluno = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         for (Path resultado : resultados) {
             List<String> linhas = gerenciador.lerLinhas(resultado);

@@ -1,0 +1,11 @@
+====================================
+BOLETIM GERAL DO ALUNO
+====================================
+
+Aluno: Arthur da Silva Almeida
+
+Disciplina: CALCULO2     Nota: 10
+
+Média geral: 10.0
+Situação final: APROVADO
+====================================

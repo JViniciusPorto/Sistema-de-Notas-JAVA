@@ -18,9 +18,8 @@ public class Disciplina {
   public void adicionarAluno(Aluno aluno, String resposta){
     if(!isAlunoContido(aluno)){
         registro.put(aluno, resposta);
-    }else{
-        System.out.println("Esse aluno já foi registrado!");
     }
+    
   }
 
   public boolean isAlunoContido(Aluno aluno){
@@ -29,7 +28,7 @@ public class Disciplina {
     }
     for(Map.Entry<Aluno,String> entrada : registro.entrySet()){
         Aluno temporario = entrada.getKey();
-        if(temporario.getNome().equals(aluno.getNome())){
+        if(temporario.getNome().equalsIgnoreCase(aluno.getNome())){
             return true;
         }
     }

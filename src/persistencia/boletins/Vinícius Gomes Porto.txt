@@ -1,0 +1,11 @@
+====================================
+BOLETIM GERAL DO ALUNO
+====================================
+
+Aluno: Vinícius Gomes Porto
+
+Disciplina: CALCULO2     Nota: 0
+
+Média geral: 0.0
+Situação final: REPROVADO
+====================================
