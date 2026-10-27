@@ -319,7 +319,7 @@ public class Sistema {
             }
             LimparTela.esperar(1000);
         }
-        String titulo = disciplina.getNome()+"Gabarito";
+        String titulo = disciplina.getNome()+"_Gabarito";
         estadoSalvamento = gerenciador.criarArquivoGabarito(titulo, gabarito);
 
         if(estadoSalvamento != ResultadoSalvamento.SALVO){

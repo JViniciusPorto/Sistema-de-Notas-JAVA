@@ -32,7 +32,7 @@ public class TratamentoDeEntradas {
     public static String tratarNomeArquivo(String nomeArquivo) {
         String semAcento = Normalizer.normalize(nomeArquivo.trim(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");          
         // remove os acentos (á→a, ã→a, ç→c...)
-        return semAcento.toUpperCase().replaceAll("[^A-Z0-9]", "");
+        return semAcento.toUpperCase().replaceAll("[^A-Z0-9]", "").replaceAll("\\s+"," ").trim();
     }
 
     public static String tratarTexto(String texto){
