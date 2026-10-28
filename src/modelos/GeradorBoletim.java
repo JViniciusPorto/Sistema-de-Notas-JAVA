@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import enums.ResultadoExclusao;
 import enums.ResultadoGeracao;
 import enums.ResultadoSalvamento;
 import gerenciar_arquivos.GerenciarArquivos;
@@ -76,18 +77,26 @@ public class GeradorBoletim {
         if (notasPorAluno.isEmpty()) {
             return ResultadoGeracao.SEM_RESULTADOS;
         }
+        if(gerenciador.limparBoletins() != ResultadoExclusao.EXCLUIDO){
+            detalheErro = "(não foi possível limpar os boletins antigos; algum deles está aberto em outro programa?)";
+            return ResultadoGeracao.ERRO_LIMPEZA;
+        }
+        List<String> erros = new ArrayList<>();
 
         for (Map.Entry<String, List<Nota>> entrada : notasPorAluno.entrySet()) {
             String nomeAluno = entrada.getKey();
             Boletim boletim = new Boletim(alunos.get(nomeAluno), entrada.getValue());
 
             if (gerenciador.salvarBoletim(nomeAluno, boletim.gerarTexto()) != ResultadoSalvamento.SALVO) {
-                detalheErro = nomeAluno;
-                return ResultadoGeracao.ERRO_ESCRITA;
+                erros.add(nomeAluno);
+                continue;
             }
             boletinsGerados.add(boletim);
         }
-
+        if(!erros.isEmpty()){
+            detalheErro = String.join(", ",erros);
+            return ResultadoGeracao.ERRO_ESCRITA;
+        }
         return ResultadoGeracao.GERADO;
     }
 

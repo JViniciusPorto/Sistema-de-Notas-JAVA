@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
 
+import enums.ResultadoExclusao;
 import enums.ResultadoSalvamento;
 import enums.ResultadoTratamento;
 
@@ -25,11 +26,7 @@ import modelos.*;
 import utilidades.TratamentoDeEntradas;
 
 public class GerenciarArquivos {
-    // Sufixo dos resultados por ordem alfabética (ex.: POO_alfabetico.txt). Quem GRAVA esses
-    // resultados (módulo de resultados) deve usar esta mesma constante, para os nomes nunca divergirem.
     public static final String SUFIXO_RESULTADO_ALFABETICO = "_alfabetico.txt";
-    // Resultado ordenado por nota decrescente, com a média da turma no final (ex.: POO_por_nota.txt).
-    // Não termina com o sufixo acima, então o GeradorBoletim ignora esses arquivos.
     public static final String SUFIXO_RESULTADO_POR_NOTA = "_por_nota.txt";
     private final Path pastaResultados = Path.of("src", "persistencia", "resultados");
     private final Path pastaBoletins = Path.of("src", "persistencia", "boletins");
@@ -206,6 +203,28 @@ public class GerenciarArquivos {
             return ResultadoSalvamento.ARQUIVO_INACESSIVEL;
         }catch(IOException e){
             return ResultadoSalvamento.ERRO_ARQUIVO;
+        }
+    }
+
+    // Apaga os .txt da pasta de boletins. Se a pasta ainda não existe, não há nada a apagar.
+    public ResultadoExclusao limparBoletins() {
+        if (!Files.isDirectory(pastaBoletins)) {
+            return ResultadoExclusao.NAO_E_DIRETORIO;
+        }
+        try (Stream<Path> arquivos = Files.list(pastaBoletins)) {
+            // primeiro junta numa lista, depois apaga (não se apaga enquanto a pasta está sendo percorrida)
+            List<Path> antigos = arquivos
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.getFileName().toString().toLowerCase().endsWith(".txt"))
+                    .collect(Collectors.toList());
+            for (Path antigo : antigos) {
+                Files.delete(antigo);
+            }
+            return ResultadoExclusao.EXCLUIDO;
+        } catch (AccessDeniedException e) {
+            return ResultadoExclusao.ARQUIVO_INACESSIVEL;
+        } catch (IOException e) {
+            return ResultadoExclusao.ERRO_ARQUIVO;
         }
     }
 

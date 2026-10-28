@@ -1,7 +1,8 @@
 package enums;
 
 public enum ResultadoExclusao {
+    NAO_E_DIRETORIO,
     EXCLUIDO,
-    NAO_EXISTE,
-    ERRO  
+    ARQUIVO_INACESSIVEL,
+    ERRO_ARQUIVO
 }

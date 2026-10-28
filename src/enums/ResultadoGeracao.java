@@ -6,5 +6,6 @@ public enum ResultadoGeracao {
     SEM_RESULTADOS,
     ERRO_LEITURA,
     FORMATO_INVALIDO,
-    ERRO_ESCRITA
+    ERRO_ESCRITA,
+    ERRO_LIMPEZA
 }

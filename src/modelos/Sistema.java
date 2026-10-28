@@ -150,8 +150,6 @@ public class Sistema {
         }
     }
 
-    // Item 2 do trabalho: escolhe a disciplina, lê o gabarito oficial, corrige, grava os dois
-    // resultados (alfabético e por nota) e deixa o usuário visualizá-los na tela.
     private void gerarResultadoDisciplina(){
         String texto;
         ResultadoSalvamento estadoSalvamento;
@@ -168,7 +166,6 @@ public class Sistema {
             return;
         }
 
-        // 1) escolher a disciplina
         String nomeDisciplina;
         while(true){
             System.out.println("Disciplinas disponíveis:");
@@ -207,7 +204,6 @@ public class Sistema {
             return;
         }
 
-        // 2) ler o gabarito oficial (arquivo com uma única linha de 10 respostas V/F)
         String gabarito;
         while(true){
             System.out.println("\nInforme a localização do arquivo com o gabarito oficial");
@@ -257,7 +253,6 @@ public class Sistema {
             LimparTela.esperar(1000);
         }
 
-        // 3) corrigir e gravar os dois arquivos
         List<Nota> notas = corretor.corrigirDisciplina(disciplina, gabarito);
         String textoAlfabetico = corretor.gerarTextoAlfabetico(notas);
         String textoPorNota = corretor.gerarTextoPorNota(notas);
@@ -273,7 +268,6 @@ public class Sistema {
         System.out.println(" - " + nomeDisciplina + GerenciarArquivos.SUFIXO_RESULTADO_ALFABETICO);
         System.out.println(" - " + nomeDisciplina + GerenciarArquivos.SUFIXO_RESULTADO_POR_NOTA);
 
-        // 4) visualizar na tela
         System.out.println("\nDeseja visualizar os resultados na tela? (S/N)");
         texto = TratamentoDeEntradas.tratarTexto(teclado.nextLine());
         if(texto.equals("S")){
@@ -286,8 +280,6 @@ public class Sistema {
         teclado.nextLine();
     }
 
-    // Chamado ao final do cadastro: pede o gabarito oficial da disciplina, corrige as provas
-    // e grava os resultados (alfabético e por nota) na pasta de resultados.
     private void registrarGabaritoDisciplina(Disciplina disciplina){
         String gabarito;
         String resposta;
@@ -335,8 +327,6 @@ public class Sistema {
         LimparTela.esperar(2000);
     }
 
-    // Item 3 do trabalho: lê os resultados de todas as disciplinas da pasta de resultados
-    // e gera um boletim .txt para cada aluno.
     private void gerarBoletins(){
         String texto;
         LimparTela.limparTerminal();
@@ -357,8 +347,12 @@ public class Sistema {
         }else if(estadoGeracao == ResultadoGeracao.FORMATO_INVALIDO){
             System.out.println("Formato inválido em " + gerador.getDetalheErro());
             System.out.println("Cada linha deve ser: NOME<TAB>NOTA");
+        }else if(estadoGeracao == ResultadoGeracao.ERRO_LIMPEZA){
+            System.out.println("Não foi possível apagar os boletins antigos!");
+            System.out.println("Feche os arquivos de " + gerenciador.getPastaBoletins() + " que estejam abertos e tente novamente.");
         }else if(estadoGeracao == ResultadoGeracao.ERRO_ESCRITA){
-            System.out.println("Erro ao salvar o boletim de " + gerador.getDetalheErro() + "!");
+            System.out.println(gerador.getBoletinsGerados().size()+" boletim(ns) gerado(s).");
+            System.out.println("Não foi possível salvar o boletim de :"+gerador.getDetalheErro());
         }else if(estadoGeracao == ResultadoGeracao.GERADO){
             List<Boletim> boletins = gerador.getBoletinsGerados();
             System.out.println(boletins.size() + " boletim(ns) gerado(s) em " + gerenciador.getPastaBoletins());

@@ -12,7 +12,7 @@ public class Boletim {
 
     public Boletim(Aluno aluno, List<Nota> notas) {
         this.aluno = aluno;
-        this.notas = new ArrayList<>(notas); // cópia: mudanças na lista original não afetam o boletim
+        this.notas = new ArrayList<>(notas);
         calcularMedia();
     }
 

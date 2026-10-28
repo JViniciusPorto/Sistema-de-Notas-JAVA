@@ -32,7 +32,7 @@ public class CorretorProva {
         }
         return acertos;
     }
-
+    
     public List<Nota> corrigirDisciplina(Disciplina disciplina, String gabarito){
         List<Nota> notas = new ArrayList<>();
         for(Map.Entry< Aluno, String> entrada : disciplina.getRegistros().entrySet()){
@@ -73,18 +73,14 @@ public class CorretorProva {
         return Math.round(soma / notas.size() * 10) / 10.0;
     }
 
-    // Texto do resultado em ordem alfabética: uma linha "NOME<TAB>NOTA" por aluno.
-    // Precisa ficar exatamente nesse formato (sem média), porque o GeradorBoletim lê esse arquivo.
     public String gerarTextoAlfabetico(List<Nota> notas) {
         return montarLinhas(ordenarAlfabetico(notas));
     }
 
-    // Texto do resultado por nota decrescente, com a média da turma no final.
     public String gerarTextoPorNota(List<Nota> notas) {
         String nl = System.lineSeparator();
         StringBuilder sb = new StringBuilder(montarLinhas(ordenarPorNotaDecrescente(notas)));
         sb.append(nl);
-        // Locale.US garante "7.5" (e não "7,5") mesmo com o Windows em português
         sb.append(String.format(Locale.US, "Média da turma: %.1f", calcularMediaTurma(notas))).append(nl);
         return sb.toString();
     }
