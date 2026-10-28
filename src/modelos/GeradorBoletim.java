@@ -77,7 +77,9 @@ public class GeradorBoletim {
         if (notasPorAluno.isEmpty()) {
             return ResultadoGeracao.SEM_RESULTADOS;
         }
-        if(gerenciador.limparBoletins() != ResultadoExclusao.EXCLUIDO){
+
+        ResultadoExclusao estado = gerenciador.limparBoletins();
+        if(estado != ResultadoExclusao.EXCLUIDO && estado != ResultadoExclusao.NAO_E_DIRETORIO){
             detalheErro = "(não foi possível limpar os boletins antigos; algum deles está aberto em outro programa?)";
             return ResultadoGeracao.ERRO_LIMPEZA;
         }
