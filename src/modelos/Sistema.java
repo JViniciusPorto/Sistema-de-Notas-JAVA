@@ -47,13 +47,13 @@ public class Sistema {
 
             if(nomeArquivo.isEmpty()){
                 System.out.println("Digite um nome válido (letras ou números)!");
-                LimparTela.esperar(1000);
+                LimparTela.esperar(3000);
                 continue;
             }
             if(gerenciador.existeDisciplina(nomeArquivo)){
                 System.out.println("Já existe um arquivo com esse nome!");
                 System.out.println("Escreva outro nome!");
-                LimparTela.esperar(1000);
+                LimparTela.esperar(3000);
                 continue;
             }
             disciplina = new Disciplina(nomeArquivo);
@@ -65,7 +65,7 @@ public class Sistema {
                 break;
             }else if(!texto.equals("N")){
                 System.out.println("Erro ao confirmar título!");
-                LimparTela.esperar(1000);
+                LimparTela.esperar(3000);
             }
         }
 
@@ -85,13 +85,13 @@ public class Sistema {
                 LimparTela.esperar(1000);
             }else{
                 System.out.println("Digite um nome válido!");
-                LimparTela.esperar(1000);
+                LimparTela.esperar(3000);
                 continue;
             }
 
             if(disciplina.isAlunoContido(aluno)){
                 System.out.println("Esse aluno já foi registrado!");
-                LimparTela.esperar(1000);
+                LimparTela.esperar(3000);
                 continue;
             }
 
@@ -106,16 +106,16 @@ public class Sistema {
                     break;
                 }else if(resultado == ResultadoTratamento.CARACTERE_INVALIDO){
                     System.out.println("Digite somente com V/F");
-                    LimparTela.esperar(1000);
+                    LimparTela.esperar(3000);
                     continue;
                 }else if( resultado == ResultadoTratamento.INCOMPLETO){
                     System.out.println("Digite 10 respostas para o gabarito!");
-                    LimparTela.esperar(1000);
+                    LimparTela.esperar(3000);
                     continue;
                 }else{
                     System.out.println("Erro ao registrar o gabarito!");
                     System.out.println("Tente novamente!");
-                    LimparTela.esperar(1000);
+                    LimparTela.esperar(3000);
                     continue;
                 }
 
@@ -139,14 +139,16 @@ public class Sistema {
 
         if(estadoSalvamento == ResultadoSalvamento.SALVO){
             System.out.println("Registros dos gabaritos salvos!");
-            LimparTela.esperar(1000);
+            LimparTela.esperar(3000);
             registrarGabaritoDisciplina(disciplina);
         }else if(estadoSalvamento == ResultadoSalvamento.ARQUIVO_INACESSIVEL){
             System.out.println("Erro de acessibilidade!");
             System.out.println("Tente novamente mais tarde ou entre\nem contato com os desenvolvedores");
+            LimparTela.esperar(3000);
         }else if(estadoSalvamento == ResultadoSalvamento.ERRO_ARQUIVO){
             System.out.println("Erro ao salvar registros!");
             System.out.println("Tente novamente mais tarde ou entre\nem contato com os desenvolvedores");
+            LimparTela.esperar(3000);
         }
     }
 
@@ -162,7 +164,7 @@ public class Sistema {
         List<String> disciplinas = gerenciador.listarDisciplinas();
         if(disciplinas.isEmpty()){
             System.out.println("Nenhuma disciplina cadastrada!");
-            LimparTela.esperar(1500);
+            LimparTela.esperar(3000);
             return;
         }
 
@@ -188,19 +190,19 @@ public class Sistema {
                 System.out.println("Opção inválida!");
             }
             
-            LimparTela.esperar(1000);
+            LimparTela.esperar(3000);
             LimparTela.limparTerminal();
         }
 
         Disciplina disciplina = gerenciador.lerArquivoDisciplina(nomeDisciplina);
         if(disciplina == null){
             System.out.println("Erro ao ler o arquivo da disciplina " + nomeDisciplina + "!");
-            LimparTela.esperar(1500);
+            LimparTela.esperar(3000);
             return;
         }
         if(disciplina.getRegistros().isEmpty()){
             System.out.println("A disciplina " + nomeDisciplina + " ainda não tem alunos cadastrados!");
-            LimparTela.esperar(1500);
+            LimparTela.esperar(3000);
             return;
         }
 
@@ -212,7 +214,7 @@ public class Sistema {
             if(caminhoTexto.isEmpty()){
                 return;
             }
-            // o Windows ("Copiar como caminho") coloca o caminho entre aspas
+            
             caminhoTexto = caminhoTexto.replaceAll("^\"|\"$", "");
 
             Path caminho;
@@ -220,14 +222,14 @@ public class Sistema {
                 caminho = Path.of(caminhoTexto);
             }catch(InvalidPathException e){
                 System.out.println("Caminho inválido!");
-                LimparTela.esperar(1000);
+                LimparTela.esperar(3000);
                 continue;
             }
 
             List<String> linhas = gerenciador.lerLinhas(caminho);
             if(linhas == null){
                 System.out.println("Não foi possível ler o arquivo! Confira o caminho.");
-                LimparTela.esperar(1000);
+                LimparTela.esperar(3000);
                 continue;
             }
 
@@ -244,7 +246,13 @@ public class Sistema {
             resultado = TratamentoDeEntradas.validarResposta(candidato);
             if(resultado == ResultadoTratamento.VALIDO){
                 gabarito = candidato;
-                break;
+                if(corretor.marcouTudoIgual(gabarito)){
+                    System.out.println("O gabarito não pode ter todas as alternativas iguais!");
+                    LimparTela.esperar(3000);
+                    return;
+                }else{
+                    break;
+                }
             }else if(resultado == ResultadoTratamento.CARACTERE_INVALIDO){
                 System.out.println("O gabarito deve ter somente V/F!");
             }else{
@@ -261,7 +269,7 @@ public class Sistema {
         if(estadoSalvamento != ResultadoSalvamento.SALVO){
             System.out.println("Erro ao salvar os resultados!");
             System.out.println("Tente novamente mais tarde ou entre\nem contato com os desenvolvedores");
-            LimparTela.esperar(1500);
+            LimparTela.esperar(3000);
             return;
         }
         System.out.println("\nResultados gerados em " + gerenciador.getPastaResultados() + ":");
@@ -284,7 +292,7 @@ public class Sistema {
         String gabarito;
         String resposta;
         ResultadoSalvamento estadoSalvamento;
-        CorretorProva corretor = new CorretorProva();
+        CorretorProva corretorGabarito = new CorretorProva();
         while(true){
             LimparTela.limparTerminal();
             System.out.println("\n==============================================");
@@ -292,9 +300,14 @@ public class Sistema {
             System.out.println("==============================================\n");
             System.out.println("Digite o gabarito oficial da disciplina " + disciplina.getNome() + ":");
             System.out.println("[Somente com V/F]");
+            System.out.println("Caso não queira digitar o gabarito digite 'SAIR'!");
             resposta = TratamentoDeEntradas.tratarResposta(teclado.nextLine());
-            
-            if(corretor.marcouTudoIgual(resposta)){
+
+            if(resposta.equals("SAIR")){
+                return;
+            }
+
+            if(corretorGabarito.marcouTudoIgual(resposta)){
                 System.out.println("O gabarito não pode ter todas as alternativas iguais!");
                 LimparTela.esperar(1000);
                 continue;
@@ -309,7 +322,7 @@ public class Sistema {
             }else{
                 System.out.println("Digite 10 respostas para o gabarito!");
             }
-            LimparTela.esperar(1000);
+            LimparTela.esperar(3000);
         }
         String titulo = disciplina.getNome()+"_Gabarito";
         estadoSalvamento = gerenciador.criarArquivoGabarito(titulo, gabarito);
@@ -317,14 +330,14 @@ public class Sistema {
         if(estadoSalvamento != ResultadoSalvamento.SALVO){
             System.out.println("Erro ao salvar o gabarito!");
             System.out.println("Tente novamente mais tarde ou entre em contato\ncom os desenvolvedores");
-            LimparTela.esperar(1000);
+            LimparTela.esperar(3000);
             return;
         }
         System.out.printf("Arquivo %s criado com sucesso!\n",titulo);
         System.out.println("Caminho do arquivo:");
         Path caminho = gerenciador.transformarCaminhoGabarito(titulo);
         System.out.printf("\n%s\n",caminho.toString());
-        LimparTela.esperar(2000);
+        LimparTela.esperar(3000);
     }
 
     private void gerarBoletins(){
@@ -370,6 +383,8 @@ public class Sistema {
         System.out.println("\nPressione ENTER para continuar.");
         teclado.nextLine();
     }
+
+    
     public void menu(){
         while(true){
             LimparTela.limparTerminal();
@@ -397,7 +412,7 @@ public class Sistema {
                     return;
                 default:
                     System.out.println("Opção Inválida!");
-                    LimparTela.esperar(1000);
+                    LimparTela.esperar(3000);
                     break;
             }
         }

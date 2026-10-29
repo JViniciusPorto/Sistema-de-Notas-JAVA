@@ -21,9 +21,6 @@ public class GeradorBoletim {
         this.gerenciador = gerenciador;
     }
 
-    // Lê os relatórios alfabéticos (NOME_DA_DISCIPLINA_alfabetico.txt) do diretório, junta as notas
-    // de cada aluno, monta um Boletim por aluno e salva cada um em .txt.
-    // Não imprime nada: devolve um ResultadoGeracao e o Sistema decide as mensagens.
     public ResultadoGeracao gerar(Path diretorioResultados) {
         boletinsGerados.clear();
         detalheErro = "";
@@ -37,7 +34,6 @@ public class GeradorBoletim {
             return ResultadoGeracao.SEM_RESULTADOS;
         }
 
-        // TreeMap: os boletins saem em ordem alfabética de aluno
         Map<String, Aluno> alunos = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         Map<String, List<Nota>> notasPorAluno = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 

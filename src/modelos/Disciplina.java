@@ -21,7 +21,7 @@ public class Disciplina {
     }
     
   }
-
+  
   public boolean isAlunoContido(Aluno aluno){
     if(registro.isEmpty()){
         return false;
